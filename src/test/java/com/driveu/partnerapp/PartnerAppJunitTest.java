@@ -1,11 +1,13 @@
 package com.driveu.partnerapp;
 
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -33,9 +35,9 @@ public class PartnerAppJunitTest {
 	WebDriver webdriver;
 	
 	Dimension screenSize;
-	@Test
-	public void test() throws MalformedURLException, InterruptedException {
-		
+	
+	@BeforeMethod
+	public void capCheck(){
 		try{//installing newly
 			DesiredCapabilities cap = new DesiredCapabilities();
 		    cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
@@ -49,6 +51,11 @@ public class PartnerAppJunitTest {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	@Test
+	public void test() throws MalformedURLException, InterruptedException {
+		
+		
 		SignInObject sign = new SignInObject(driver);
 		LoginObject login = new LoginObject(driver);
 		DashBoardObject dashboard = new DashBoardObject(driver);
@@ -128,7 +135,7 @@ public class PartnerAppJunitTest {
 		ongoingscreen.rnumtextcityid().sendKeys("99");
 		ongoingscreen.rnumtextalp().sendKeys("DD");
 		ongoingscreen.rnumtextno().sendKeys("9999");
-		
+		driver.hideKeyboard();
 		ongoingscreen.regSubmit().click();
 		
 		ongoingscreen.ongoingCallDispatch().click();
@@ -192,12 +199,12 @@ public class PartnerAppJunitTest {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		dashboard.hamMenu().click();
 		try{
 			drawer.checkIn().click();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		dashboard.hamMenu().click();
 		drawer.signOut().click();
 		driver.closeApp();
 		
@@ -222,6 +229,4 @@ public class PartnerAppJunitTest {
 	public void backEvent(){
 		driver.sendKeyEvent(AndroidKeyCode.BACK);
 	}
-	
-
 }
