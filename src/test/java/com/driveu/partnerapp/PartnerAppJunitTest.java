@@ -96,14 +96,17 @@ public class PartnerAppJunitTest {
 			e.printStackTrace();
 		}
 		reservedscreen.reservedCalldispatch().click();
-			backEvent();
+		driver.startActivity("com.driveu.partner", "MainActivity");
 		Thread.sleep(20000);//time delay to swipe event
 		swipeCheckIn();
 		Thread.sleep(3000);
 		onroutescreen.onrouteCalldispatch().click();
-			backEvent();
+		driver.startActivity("com.driveu.partner", "MainActivity");
+		Thread.sleep(3000);
+			//backEvent();
 		onroutescreen.onrouteContactCustomer().click();
-			backEvent();
+		driver.startActivity("com.driveu.partner", "MainActivity");
+			//backEvent();
 		Thread.sleep(10000);//time delay to swipe event
 		swipeCheckIn();
 		Thread.sleep(5000);
