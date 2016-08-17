@@ -34,7 +34,7 @@ public class SeleniumDatabase {
  
     public String getAppBookingDataBase() {
         try {
-            String query = "select booking_id,status from app_booking where customer_mobile=9787544561 and status=0";
+            String query = "select booking_id,status from app_booking where customer_mobile=9900151005 and status=0";
             statement = connection.createStatement();
             rs = statement.executeQuery(query);
 

@@ -13,26 +13,36 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Select;
 
-import io.appium.java_client.android.AndroidDriver;
-
 
 public class CreateBookingAssignDriver {
 	WebDriver driver;
+	static String bok;
 	
 	public CreateBookingAssignDriver(WebDriver driver){
 		this.driver = driver;
 	}
-
-	public void cbad() {
+	
+	public void openhulk(){
 		driver = new FirefoxDriver();
 		driver.get("http://apps.driveubox.com/");
 		driver.manage().timeouts().implicitlyWait(60L,TimeUnit.SECONDS);
+	}
+	
+	public void loginauthen(){
 		driver.findElement(By.xpath("//a[@href='/login/google-oauth2/']")).click();
 		driver.findElement(By.xpath("//input[@id='Email']")).sendKeys("durga.m@driveu.in");
 		driver.findElement(By.xpath("//input[@id='next']")).click();
-		driver.findElement(By.xpath("//input[@id='Passwd']")).sendKeys("durgaDivya1194");
+		driver.findElement(By.xpath("//input[@id='Passwd']")).sendKeys("123");
+		
+	
 		driver.findElement(By.xpath("//input[@id='PersistentCookie']")).click();
 		driver.findElement(By.xpath("//input[@id='signIn']")).click();
+	}
+	
+	public void bookingassigndriver() {
+		openhulk();
+		
+		loginauthen();
 		
 		driver.findElement(By.xpath("//strong[text()='Booking']")).click();
 		driver.findElement(By.xpath("//a[@href='/app/create-booking/']")).click();
@@ -66,7 +76,7 @@ public class CreateBookingAssignDriver {
 		 datetime.sendKeys(Keys.TAB);
 		 
 		 WebElement loginmobile = driver.findElement(By.xpath("//input[@id='id_login-mobile']"));
-		 loginmobile.sendKeys("9787544561");
+		 loginmobile.sendKeys("9900151005");
 		 loginmobile.sendKeys(Keys.TAB);
 		  
 		 WebElement loginname = driver.findElement(By.xpath("//input[@id='id_login-name']"));
@@ -108,8 +118,8 @@ public class CreateBookingAssignDriver {
 		
 		 SeleniumDatabase sa = new SeleniumDatabase();
 		 sa.setUp();
-		 String bok = sa.getAppBookingDataBase();
-		 sa.tearDown();	
+		 bok = sa.getAppBookingDataBase();
+		// sa.tearDown();	
 		 
 		 driver.findElement(By.xpath("//input[@class='form-control search-go']")).sendKeys(bok);
 		 driver.findElement(By.xpath("//button[@class='btn btn-booking-status btn-danger']")).click();
@@ -135,6 +145,23 @@ public class CreateBookingAssignDriver {
 		 driver.findElement(By.xpath("//a[@href='/accounts/logout/']")).click();
 		 driver.close();
 
+	}
+	
+	public void paymentonline() throws InterruptedException {
+		System.out.println("paymennnnttttttt");
+		System.out.println("Bokking Id::::"+bok);
+		
+		openhulk();
+		
+		loginauthen();
+		
+		Thread.sleep(3000);
+         
+        driver.get("http://apps.driveubox.com/app/bookings/?search_for=booking_id&q="+bok);
+		driver.findElement(By.xpath("//button[@class='btn btn-booking-status btn-danger']")).click();
+		 
+		driver.findElement(By.xpath("//a[text()='Edit Fare']")).click();
+		
 	}
 
 }
