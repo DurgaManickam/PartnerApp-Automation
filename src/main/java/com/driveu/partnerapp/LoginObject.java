@@ -28,7 +28,7 @@ public class LoginObject {
 	}
 	
 	public void driver_enter(){
-		driver.sendKeyEvent(AndroidKeyCode.ENTER);
+		driver.pressKeyCode(AndroidKeyCode.ENTER);
 	}
 	
 	public WebElement loginButton(){

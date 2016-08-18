@@ -46,8 +46,8 @@ public class PartnerAppJunitTest {
 			cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
 			cap.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Device");
 			cap.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "500");
-			cap.setCapability(MobileCapabilityType.APP_PACKAGE, "com.driveu.partner");
-			cap.setCapability(MobileCapabilityType.APP_ACTIVITY, "com.driveu.partner.MainActivity");
+			cap.setCapability("app_package", "com.driveu.partner");
+			cap.setCapability("app_activity", "com.driveu.partner.MainActivity");
 			driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 			driver.manage().timeouts().implicitlyWait(60L, TimeUnit.SECONDS);
 		} catch (Exception e) {
@@ -231,7 +231,7 @@ public class PartnerAppJunitTest {
 		walletdetails.walletBalance().click();
 		dashboard.hamMenu().click();
 		drawer.help().click();
-		driver.sendKeyEvent(AndroidKeyCode.BACK);
+		driver.pressKeyCode(AndroidKeyCode.BACK);
 		dashboard.hamMenu().click();
 		try {
 			drawer.checkOut().click();
@@ -323,6 +323,6 @@ public class PartnerAppJunitTest {
 	}
 
 	public void backEvent() {
-		driver.sendKeyEvent(AndroidKeyCode.BACK);
+		driver.pressKeyCode(AndroidKeyCode.BACK);
 	}
 }
