@@ -1,14 +1,14 @@
 package com.driveu.partnerapp;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 public class DrawerMenuObject {
 	
-	AndroidDriver driver;
-	public DrawerMenuObject(AndroidDriver driver){
+	AndroidDriver<MobileElement> driver;
+	public DrawerMenuObject(AndroidDriver<MobileElement> driver){
 		this.driver = driver;
 	}
 	String driver_currentbooking = "new UiSelector().text(\"Current Booking\")";

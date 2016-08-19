@@ -3,12 +3,14 @@ package com.driveu.partnerapp;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 public class SummaryScreenObject {
 	
-	AndroidDriver driver;
-	public SummaryScreenObject(AndroidDriver driver) {
+	AndroidDriver<MobileElement> driver;
+	
+	public SummaryScreenObject(AndroidDriver<MobileElement> driver) {
 		this.driver = driver;
 	}
 	
@@ -25,7 +27,11 @@ public class SummaryScreenObject {
 	By rnumtextno = By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[2]/android.widget.EditText[4]");
 	
 	By sumregSub = By.xpath("//android.widget.LinearLayout[1]/android.widget.FrameLayout[1]/android.widget.FrameLayout[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[1]/android.view.View[3]");
+	String collectfareok = "new UiSelector().text(\"Ok\")";
 	
+	public WebElement collectfareok(){
+		return driver.findElementByAndroidUIAutomator(collectfareok);
+	}
 	
 	public WebElement rnumtextstate(){
 		return driver.findElement(rnumtextstate);

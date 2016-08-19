@@ -1,17 +1,16 @@
 package com.driveu.partnerapp;
 
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 
 public class LoginObject {
 
-	AndroidDriver driver;
-	public LoginObject(AndroidDriver driver){
+	AndroidDriver<MobileElement> driver;
+	public LoginObject(AndroidDriver<MobileElement> driver){
 		this.driver = driver;
 	}
 	

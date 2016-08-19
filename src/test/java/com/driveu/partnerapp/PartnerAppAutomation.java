@@ -13,11 +13,12 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidKeyCode;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
-import com.driveu.partnerapp.CreateBookingAssignDriver;
+import com.driveu.partnerapp.HulkObject;
 import com.driveu.partnerapp.DashBoardObject;
 import com.driveu.partnerapp.DrawerMenuObject;
 import com.driveu.partnerapp.HistoryObject;
@@ -30,25 +31,37 @@ import com.driveu.partnerapp.SignInObject;
 import com.driveu.partnerapp.SummaryScreenObject;
 import com.driveu.partnerapp.WalletObject;
 
-public class PartnerAppJunitTest {
+public class PartnerAppAutomation {
 
-	AndroidDriver driver;
+	AndroidDriver<MobileElement> driver;
 	WebDriver webdriver;
 
 	Dimension screenSize;
+	
+	DesiredCapabilities cap;
+	SignInObject sign;
+	LoginObject login;
 	DashBoardObject dashboard;
+	ReservedScreenObject reservedscreen;
+	OnRouteScreenObject onroutescreen;
+	ReachedScreenObject reachedscreen;
+	OnGoingDriveObject ongoingscreen;
+	SummaryScreenObject summaryscreen;
 	DrawerMenuObject drawer;
+	HistoryObject historyscreen;
+	WalletObject walletdetails;
 
 	@BeforeMethod
 	public void capCheck() {
-		try {// installing newly
-			DesiredCapabilities cap = new DesiredCapabilities();
+		try {// installing the app newly
+			cap = new DesiredCapabilities();
 			cap.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
 			cap.setCapability(MobileCapabilityType.DEVICE_NAME, "Android Device");
 			cap.setCapability(MobileCapabilityType.NEW_COMMAND_TIMEOUT, "500");
+			cap.setCapability(MobileCapabilityType.APP, "/Users/durgadevi/Desktop/qa_driver.apk");
 			cap.setCapability("app_package", "com.driveu.partner");
 			cap.setCapability("app_activity", "com.driveu.partner.MainActivity");
-			driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
+			driver = new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 			driver.manage().timeouts().implicitlyWait(60L, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -57,18 +70,21 @@ public class PartnerAppJunitTest {
 
 	@Test
 	public void collectedFaretest() throws InterruptedException, IOException {
-		dashboard = new DashBoardObject(driver);
+		summaryscreen = new SummaryScreenObject(driver);
 		try {
 			appFlow();
-			Thread.sleep(15000);
+			
+			Thread.sleep(3000);
 			
 			try {
-				dashboard.collectedfareok().click();// wallet money
+				summaryscreen.collectfareok().click();// wallet money
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 			try {
+				summaryinput();//summary screen options 
+				Thread.sleep(10000);
 				swipeCollectedFare();// collect fare option in summary screen
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -84,54 +100,45 @@ public class PartnerAppJunitTest {
 
 	@Test
 	public void payonlinetest() throws InterruptedException, IOException {
+		summaryscreen = new SummaryScreenObject(driver);
 		try {
 			appFlow();
+			
+			summaryinput();//summary screen options 
 
 			Thread.sleep(5000);
 			swipeCheckIn();//customer pays online option in summary screen
 
 			Thread.sleep(15000);
 
-			CreateBookingAssignDriver paydriver = new CreateBookingAssignDriver(webdriver);
-			paydriver.paymentonline();
+			HulkObject onlinePayment = new HulkObject(webdriver);
+			onlinePayment.paymentonline();
+			
 			Thread.sleep(20000);
 
-			dashboard.collectedfareok().click();
+			summaryscreen.collectfareok().click();
 
 			Thread.sleep(10000);
 			drawerOption();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public void appFlow() {
 		try {
-			SignInObject sign = new SignInObject(driver);
-			LoginObject login = new LoginObject(driver);
+			
 			dashboard = new DashBoardObject(driver);
-			DrawerMenuObject drawer = new DrawerMenuObject(driver);
-			ReservedScreenObject reservedscreen = new ReservedScreenObject(driver);
-			OnRouteScreenObject onroutescreen = new OnRouteScreenObject(driver);
-			ReachedScreenObject reachedscreen = new ReachedScreenObject(driver);
-			OnGoingDriveObject ongoingscreen = new OnGoingDriveObject(driver);
-			try {
-				Thread.sleep(5000);
-				sign.signInButton().click();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			login.driver_mobile().sendKeys("9036444804");
-			login.driver_passcode().sendKeys("1234");
-			try {
-				login.driver_enter();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+			drawer = new DrawerMenuObject(driver);
+			
+			driver_signIn();
 			Thread.sleep(10000);
+			
 			swipeCheckIn();
+			
 			Thread.sleep(3000);
 
 			internetCheck();// Wifi off and on check
@@ -144,17 +151,63 @@ public class PartnerAppJunitTest {
 
 			Thread.sleep(20000);// waiting for booking
 			drawer.currentBooking().click();
-
 			try {
 				dashboard.bookingList().click();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			driver_reserved();
+			Thread.sleep(3000);
+			
+			driver_onroute();
+			Thread.sleep(5000);
+			
+			driver_reached();
+			Thread.sleep(2000);
+		
+			driver_ongoing();
+			Thread.sleep(2000);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void driver_signIn(){
+		sign = new SignInObject(driver);
+		login = new LoginObject(driver);
+		try {
+			Thread.sleep(5000);
+			sign.signInButton().click();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		login.driver_mobile().sendKeys("9036444804");
+		login.driver_passcode().sendKeys("1234");
+		try {
+			login.driver_enter();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void driver_reserved(){
+		reservedscreen =  new ReservedScreenObject(driver);
+		try{
 			reservedscreen.reservedCalldispatch().click();
-			driver.startActivity("com.driveu.partner", "MainActivity");
+			Thread.sleep(3000);
+			backEvent();
 			Thread.sleep(20000);// time delay to swipe event
 			swipeCheckIn();
-			Thread.sleep(3000);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void driver_onroute() throws InterruptedException{
+		onroutescreen = new OnRouteScreenObject(driver);
+		try{
 			onroutescreen.onrouteCalldispatch().click();
 			driver.startActivity("com.driveu.partner", "MainActivity");
 			Thread.sleep(3000);
@@ -162,15 +215,31 @@ public class PartnerAppJunitTest {
 			driver.startActivity("com.driveu.partner", "MainActivity");
 			Thread.sleep(10000);// time delay to swipe event
 			swipeCheckIn();
-			Thread.sleep(5000);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void driver_reached(){
+		reachedscreen = new ReachedScreenObject(driver);
+		try{
 			reachedscreen.reachedOkayPop().click();
 			Thread.sleep(3000);
 			driver.hideKeyboard();
 			reachedscreen.regLater().click();
 			Thread.sleep(5000);// time delay to swipe event
 			swipeCheckIn();
-
-			Thread.sleep(2000);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void driver_ongoing(){
+		ongoingscreen = new OnGoingDriveObject(driver);
+		try{
 			ongoingscreen.rnumtextstate().sendKeys("KA");
 			ongoingscreen.rnumtextcityid().sendKeys("99");
 			ongoingscreen.rnumtextalp().sendKeys("DD");
@@ -183,17 +252,14 @@ public class PartnerAppJunitTest {
 			ongoingscreen.bookingTypeOne().click();
 			ongoingscreen.bookingTypeRound().click();
 			ongoingscreen.bookingTypeSubmit().click();
-			Thread.sleep(2000);
-
-			summaryinput();//summary screen options 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void summaryinput() throws InterruptedException {
-
-		SummaryScreenObject summaryscreen = new SummaryScreenObject(driver);
+	private void summaryinput() throws InterruptedException {
+		summaryscreen = new SummaryScreenObject(driver);
 		summaryscreen.rnumtextstate().sendKeys("KA");
 		summaryscreen.rnumtextcityid().sendKeys("99");
 		summaryscreen.rnumtextalp().sendKeys("DD");
@@ -207,31 +273,49 @@ public class PartnerAppJunitTest {
 		Thread.sleep(2000);
 		summaryscreen.fareokay().click();
 	}
+	
+	private void drawer_history(){
+		historyscreen = new HistoryObject(driver);
+		try {
+			historyscreen.historyList().click();
+			historyscreen.hisTransactions().click();
+			historyscreen.transactionClose().click();
+			historyscreen.backImage().click();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void drawer_wallet(){
+		walletdetails = new WalletObject(driver);
+		walletdetails.walletTransaction().click();
+		walletdetails.walletBalance().click();
+	}
 
-	public void drawerOption() {
+	private void drawerOption() {
 		drawer = new DrawerMenuObject(driver);
-		HistoryObject historylist = new HistoryObject(driver);
-		WalletObject walletdetails = new WalletObject(driver);
 		dashboard = new DashBoardObject(driver);
 
 		dashboard.hamMenu().click();
 		drawer.history().click();
-		try {
-
-			historylist.historyList().click();
-			historylist.hisTransactions().click();
-			historylist.transactionClose().click();
-			historylist.backImage().click();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		drawer_history();
+		
 		dashboard.hamMenu().click();
 		drawer.wallet().click();
-		walletdetails.walletTransaction().click();
-		walletdetails.walletBalance().click();
+		drawer_wallet();
+		
 		dashboard.hamMenu().click();
-		drawer.help().click();
-		driver.pressKeyCode(AndroidKeyCode.BACK);
+		try{
+			drawer.help().click();
+			Thread.sleep(5000);
+			driver.startActivity("com.driveu.partner", "MainActivity");
+			Thread.sleep(10000);
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		dashboard.hamMenu().click();
 		try {
 			drawer.checkOut().click();
@@ -251,14 +335,16 @@ public class PartnerAppJunitTest {
 
 	public void hulkTest() {
 		try {
-			CreateBookingAssignDriver bookdriver = new CreateBookingAssignDriver(webdriver);
+			HulkObject bookdriver = new HulkObject(webdriver);
 			bookdriver.bookingassigndriver();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
-	public void internetCheck() throws IOException, InterruptedException {
+	private void internetCheck() throws IOException, InterruptedException {
 		String line = "null";
 
 		ProcessBuilder pbwOff = new ProcessBuilder("/Users/durgadevi/Library/Android/sdk/platform-tools/adb", "shell",

@@ -3,11 +3,12 @@ package com.driveu.partnerapp;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 public class HistoryObject {
-	AndroidDriver driver;
-	public HistoryObject(AndroidDriver driver){
+	AndroidDriver<MobileElement> driver;
+	public HistoryObject(AndroidDriver<MobileElement> driver){
 		this.driver = driver;
 	}
 	

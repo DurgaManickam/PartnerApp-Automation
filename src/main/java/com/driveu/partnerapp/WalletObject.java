@@ -3,11 +3,12 @@ package com.driveu.partnerapp;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 
 public class WalletObject {
-	AndroidDriver driver;
-	public WalletObject(AndroidDriver driver){
+	AndroidDriver<MobileElement> driver;
+	public WalletObject(AndroidDriver<MobileElement> driver){
 		this.driver = driver;
 	}
 	By walletTransaction = By.xpath("//android.widget.TextView[contains(@text,'TRANSACTIONS')]");

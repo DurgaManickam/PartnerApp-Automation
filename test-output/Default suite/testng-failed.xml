@@ -5,8 +5,11 @@
     <classes>
       <class name="com.driveu.partnerapp.PartnerApp">
         <methods>
-          <include name="reboot"/>
+          <include name="deviceOnly"/>
           <include name="LaunchApp"/>
+          <include name="highAccuracy"/>
+          <include name="batterySaving"/>
+          <include name="res"/>
         </methods>
       </class> <!-- com.driveu.partnerapp.PartnerApp -->
     </classes>
