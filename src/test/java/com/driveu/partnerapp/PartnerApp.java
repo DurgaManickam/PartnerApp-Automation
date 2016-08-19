@@ -56,7 +56,7 @@ public class PartnerApp {
 	}
 
 	@Test(priority = 4)
-	public void res() throws InterruptedException, IOException {
+	public void reboot() throws InterruptedException, IOException {
 		Thread.sleep(10000);
 		driver.closeApp();
 		Thread.sleep(10000);
@@ -65,6 +65,9 @@ public class PartnerApp {
 		Runtime.getRuntime()
 				.exec("/Users/rohit/Library/Android/sdk/platform-tools/adb shell am start -n io.appium.unlock/.Unlock");
 		Thread.sleep(5000);
+		driver.quit();
+		Thread.sleep(10000);
+		LaunchApp();
 	}
 
 }
