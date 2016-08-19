@@ -70,4 +70,12 @@ public class PartnerApp {
 		LaunchApp();
 	}
 
+	@Test(priority = 5)
+	public void disableGps() throws InterruptedException, IOException {
+		Thread.sleep(10000);
+		Runtime.getRuntime().exec(
+				"/Users/rohit/Library/Android/sdk/platform-tools/adb shell settings put secure location_providers_allowed 'true'");
+		Thread.sleep(10000);
+	}
+
 }
